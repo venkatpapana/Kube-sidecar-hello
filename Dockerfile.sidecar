@@ -1,0 +1,5 @@
+# Dockerfile.sidecar
+FROM node:20-alpine
+WORKDIR /app
+COPY sidecar.js .
+CMD ["node", "sidecar.js"]

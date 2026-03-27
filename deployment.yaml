@@ -1,0 +1,34 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sidecar-hello
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sidecar-hello
+  template:
+    metadata:
+      labels:
+        app: sidecar-hello
+    spec:
+      containers:
+
+        - name: sidecar
+          image: localhost/sidecar-hello:local
+          imagePullPolicy: Never
+          volumeMounts:
+            - name: shared-data
+              mountPath: /shared
+
+        - name: main-app
+          image: localhost/main-hello:local
+          imagePullPolicy: Never
+          volumeMounts:
+            - name: shared-data
+              mountPath: /shared       # same path, same volume
+
+      volumes:
+        - name: shared-data
+          emptyDir: {}                 # temporary in-memory volume, lives as long as the pod
